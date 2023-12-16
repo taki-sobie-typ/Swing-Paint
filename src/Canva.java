@@ -9,6 +9,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class Canva extends JPanel{
+    public void setRubberOn(Boolean rubberOn) {
+        this.rubberOn = rubberOn;
+    }
+
+    private Boolean rubberOn = false;
     private BufferedImage image = null;
 
     public void setMyColor(Color myColor) {
@@ -21,12 +26,22 @@ public class Canva extends JPanel{
         this.points.clear();
     }
 
+    public void deletePoint(Point pointToDelete) {
+        points.remove(pointToDelete);
+    }
+
     private final ArrayList<Point> points = new ArrayList<>();
     public Canva() {
         addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e){
-                points.add(e.getPoint());
+                if(rubberOn){
+                    deletePoint(e.getPoint());
+
+                } else {
+                    points.add(e.getPoint());
+                }
+                repaint();
             }
 
             @Override
@@ -38,7 +53,12 @@ public class Canva extends JPanel{
         addMouseMotionListener(new MouseAdapter() {
             @Override
             public void mouseDragged(MouseEvent e) {
-                points.add(e.getPoint());
+                if(rubberOn){
+                    deletePoint(e.getPoint());
+
+                } else {
+                    points.add(e.getPoint());
+                }
                 repaint();
             }
         });

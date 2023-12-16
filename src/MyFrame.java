@@ -3,6 +3,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.Objects;
 
 public class MyFrame extends JFrame implements ActionListener {
     MyFrame(){
@@ -52,8 +53,8 @@ public class MyFrame extends JFrame implements ActionListener {
 
         //creation of menus
         JMenu fileMenu = new JMenu("File");
-        JMenu penMenu = new JMenu("Pen");
-        JMenu effectMenu = new JMenu("Effect");
+        JMenu penMenu = new JMenu("Tools");
+        JMenu effectMenu = new JMenu("Effects");
 
         // creation of menuItems
         // for fileMenu
@@ -73,14 +74,26 @@ public class MyFrame extends JFrame implements ActionListener {
                 throw new RuntimeException(ex);
             }
         });
-        JMenuItem exitItem = new JMenuItem("Clear");
-        exitItem.addActionListener(e -> {
+        JMenuItem clearItem = new JMenuItem("Clear");
+        clearItem.addActionListener(e -> {
             canvaPanel.canva.setImage();
             canvaPanel.canva.setPointsToNull();
             canvaPanel.canva.repaint();
         });
+
+        JMenuItem helpItem = new JMenuItem("Help");
+
         // for penMenu
-        JMenuItem colorItem = new JMenuItem("Color");
+        JMenuItem rubberPenSwitcherItem = new JMenuItem("Rubber");
+        rubberPenSwitcherItem.addActionListener(e -> {
+            if(Objects.equals(rubberPenSwitcherItem.getText(), "Rubber")){
+                rubberPenSwitcherItem.setText("Pen");
+                canvaPanel.canva.setRubberOn(true);
+            } else {
+                rubberPenSwitcherItem.setText("Rubber");
+                canvaPanel.canva.setRubberOn(false);
+            }
+        });
         JMenuItem thicknessItem = new JMenuItem("Thickness");
         // for effectMenu
         JMenuItem blurItem = new JMenuItem("Blur");
@@ -94,9 +107,10 @@ public class MyFrame extends JFrame implements ActionListener {
         // adding items
         fileMenu.add(openItem);
         fileMenu.add(saveItem);
-        fileMenu.add(exitItem);
+        fileMenu.add(clearItem);
+        fileMenu.add(helpItem);
 
-        penMenu.add(colorItem);
+        penMenu.add(rubberPenSwitcherItem);
         penMenu.add(thicknessItem);
 
         effectMenu.add(blurItem);
