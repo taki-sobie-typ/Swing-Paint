@@ -30,24 +30,31 @@ public class MyFrame extends JFrame implements ActionListener {
         JButton blackButton = new JButton();
         blackButton.setBackground(Color.black);
         blackButton.addActionListener(e ->{
-            canvaPanel.canva.setMyColor(Color.BLACK);
+            canvaPanel.canva.setMyColor(0);
         });
 
         JButton redButton = new JButton();
         redButton.setBackground(Color.red);
         redButton.addActionListener(e ->{
-            canvaPanel.canva.setMyColor(Color.RED);
+            canvaPanel.canva.setMyColor(1);
         });
 
         JButton blueButton = new JButton();
         blueButton.setBackground(Color.blue);
         blueButton.addActionListener(e ->{
-            canvaPanel.canva.setMyColor(Color.BLUE);
+            canvaPanel.canva.setMyColor(2);
+        });
+
+        JButton whiteButton = new JButton();
+        whiteButton.setBackground(Color.white);
+        whiteButton.addActionListener(e ->{
+            canvaPanel.canva.setMyColor(3);
         });
 
         colorPanel.add(blackButton);
         colorPanel.add(redButton);
         colorPanel.add(blueButton);
+        colorPanel.add(whiteButton);
 
         add(colorPanel, BorderLayout.WEST);
 
@@ -97,7 +104,14 @@ public class MyFrame extends JFrame implements ActionListener {
         JMenuItem thicknessItem = new JMenuItem("Thickness");
         // for effectMenu
         JMenuItem blurItem = new JMenuItem("Blur");
-        JMenuItem monoColorItem = new JMenuItem("MonoColor");
+        JMenuItem grayScaleItem = new JMenuItem("Gray Scale");
+        grayScaleItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                canvaPanel.canva.toGrayScale();
+            }
+        });
+
 
         // adding menus
         myMenuBar.add(fileMenu);
@@ -114,7 +128,7 @@ public class MyFrame extends JFrame implements ActionListener {
         penMenu.add(thicknessItem);
 
         effectMenu.add(blurItem);
-        effectMenu.add(monoColorItem);
+        effectMenu.add(grayScaleItem);
     }
 
     @Override

@@ -1,14 +1,13 @@
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class Canva extends JPanel{
+public class Canva extends JPanel {
     public void setRubberOn(Boolean rubberOn) {
         this.rubberOn = rubberOn;
     }
@@ -16,30 +15,49 @@ public class Canva extends JPanel{
     private Boolean rubberOn = false;
     private BufferedImage image = null;
 
-    public void setMyColor(Color myColor) {
+    public void setMyColor(int myColor) {
         this.myColor = myColor;
     }
 
-    private Color myColor = Color.BLACK;
+    private int myColor = 0;
 
     public void setPointsToNull() {
-        this.points.clear();
+        this.pointsBlack.clear();
+        this.pointsRed.clear();
+        this.pointsBlue.clear();
+        this.pointsWhite.clear();
     }
 
-    public void deletePoint(Point pointToDelete) {
-        points.remove(pointToDelete);
-    }
-
-    private final ArrayList<Point> points = new ArrayList<>();
+    private final ArrayList<Point> pointsBlack = new ArrayList<>();
+    private final ArrayList<Point> pointsRed = new ArrayList<>();
+    private final ArrayList<Point> pointsBlue = new ArrayList<>();
+    private final ArrayList<Point> pointsWhite = new ArrayList<>();
     public Canva() {
         addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e){
                 if(rubberOn){
-                    deletePoint(e.getPoint());
-
+                    pointsBlack.remove(e.getPoint());
+                    pointsRed.remove(e.getPoint());
+                    pointsBlue.remove(e.getPoint());
+                    pointsWhite.remove(e.getPoint());
                 } else {
-                    points.add(e.getPoint());
+                    switch (myColor){
+                        case 0:
+                            pointsBlack.add(e.getPoint());
+                            break;
+                        case 1:
+                            pointsRed.add(e.getPoint());
+                            break;
+                        case 2:
+                            pointsBlue.add(e.getPoint());
+                            break;
+                        case 3:
+                            pointsWhite.add(e.getPoint());
+                            break;
+                        default:
+                            break;
+                    }
                 }
                 repaint();
             }
@@ -54,10 +72,27 @@ public class Canva extends JPanel{
             @Override
             public void mouseDragged(MouseEvent e) {
                 if(rubberOn){
-                    deletePoint(e.getPoint());
-
+                    pointsBlack.remove(e.getPoint());
+                    pointsRed.remove(e.getPoint());
+                    pointsBlue.remove(e.getPoint());
+                    pointsWhite.remove(e.getPoint());
                 } else {
-                    points.add(e.getPoint());
+                    switch (myColor){
+                        case 0:
+                            pointsBlack.add(e.getPoint());
+                            break;
+                        case 1:
+                            pointsRed.add(e.getPoint());
+                            break;
+                        case 2:
+                            pointsBlue.add(e.getPoint());
+                            break;
+                        case 3:
+                            pointsWhite.add(e.getPoint());
+                            break;
+                        default:
+                            break;
+                    }
                 }
                 repaint();
             }
@@ -79,11 +114,26 @@ public class Canva extends JPanel{
             graphics2D.fillRect(0,0,xWhole,yWhole);
         }
 
-
-        graphics2D.setColor(myColor);
         graphics2D.setStroke(new BasicStroke(5));
-        for (int i=0 ; i < points.size()-1 ; i++){
-            Point p1 = points.get(i);
+
+        graphics2D.setColor(Color.BLACK);
+        for (int i=0 ; i < pointsBlack.size()-1 ; i++){
+            Point p1 = pointsBlack.get(i);
+            graphics2D.drawLine(p1.x, p1.y, p1.x, p1.y);
+        }
+        graphics2D.setColor(Color.RED);
+        for (int i=0 ; i < pointsRed.size()-1 ; i++){
+            Point p1 = pointsRed.get(i);
+            graphics2D.drawLine(p1.x, p1.y, p1.x, p1.y);
+        }
+        graphics2D.setColor(Color.BLUE);
+        for (int i=0 ; i < pointsBlue.size()-1 ; i++){
+            Point p1 = pointsBlue.get(i);
+            graphics2D.drawLine(p1.x, p1.y, p1.x, p1.y);
+        }
+        graphics2D.setColor(Color.WHITE);
+        for (int i=0 ; i < pointsWhite.size()-1 ; i++){
+            Point p1 = pointsWhite.get(i);
             graphics2D.drawLine(p1.x, p1.y, p1.x, p1.y);
         }
     }
@@ -100,10 +150,24 @@ public class Canva extends JPanel{
         BufferedImage imageToSave = new BufferedImage(this.getWidth(), this.getHeight(), BufferedImage.TYPE_INT_ARGB);
         Graphics2D graphics2D = imageToSave.createGraphics();
         this.paint(graphics2D);
-
-        // clear after rendering
         graphics2D.dispose();
         return imageToSave;
+    }
+
+    public void toGrayScale(){
+        new SwingWorker<Void, Void>() {
+            @Override
+            protected Void doInBackground(){
+                System.out.println("Applying Gray Image");
+                BufferedImage grayImage = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_BYTE_GRAY);
+                Graphics g = grayImage.getGraphics();
+                g.drawImage(image,0,0,null);
+                g.dispose();
+                image = grayImage;
+                return null;
+            }
+        }.execute();
+        repaint();
     }
 
 }
