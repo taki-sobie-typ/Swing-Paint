@@ -10,7 +10,7 @@ public class MyFrame extends JFrame implements ActionListener {
     MyFrame(){
         // config
         setTitle("Paint2.0");
-        setSize(1100,800);
+        setSize(1100,750);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setResizable(false);
         setLocationRelativeTo(null);
