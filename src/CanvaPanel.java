@@ -13,7 +13,6 @@ public class CanvaPanel extends JPanel {
     CanvaPanel(){
         setLayout(new GridLayout(1,1));
         add(canva);
-        //setBorder(BorderFactory.createEmptyBorder(20,20,20,20));
     }
 
     public void chooseImage() throws IOException {

@@ -15,6 +15,12 @@ public class Canva extends JPanel {
     private Boolean rubberOn = false;
     private BufferedImage image = null;
 
+    public void setWidthOfStroke(int widthOfStroke) {
+        this.widthOfStroke = widthOfStroke;
+    }
+
+    private int widthOfStroke = 1;
+
     public void setMyColor(int myColor) {
         this.myColor = myColor;
     }
@@ -114,7 +120,7 @@ public class Canva extends JPanel {
             graphics2D.fillRect(0,0,xWhole,yWhole);
         }
 
-        graphics2D.setStroke(new BasicStroke(5));
+        graphics2D.setStroke(new BasicStroke(widthOfStroke));
 
         graphics2D.setColor(Color.BLACK);
         for (int i=0 ; i < pointsBlack.size()-1 ; i++){
@@ -158,7 +164,7 @@ public class Canva extends JPanel {
         new SwingWorker<Void, Void>() {
             @Override
             protected Void doInBackground(){
-                System.out.println("Applying Gray Image");
+                System.out.println("Applying GrayScale");
                 BufferedImage grayImage = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_BYTE_GRAY);
                 Graphics g = grayImage.getGraphics();
                 g.drawImage(image,0,0,null);
@@ -168,6 +174,47 @@ public class Canva extends JPanel {
             }
         }.execute();
         repaint();
+    }
+
+    public void pixelateImage(int n){
+        new SwingWorker<Void, Void>() {
+            @Override
+            protected Void doInBackground(){
+                System.out.println("Applying Pixelate");
+                BufferedImage pixImg = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_ARGB);
+
+                for (int y = 0; y < image.getHeight() - n; y += n) {
+                    for (int x = 0; x < image.getWidth() - n; x += n) {
+                        int[] pixelSum = new int[]{0, 0, 0, 0}; // RGBA
+
+                        for (int a = 0; a < n; a++) {
+                            for (int b = 0; b < n; b++) {
+                                int rgb = image.getRGB(x + a, y + b);
+                                pixelSum[0] += (rgb >> 24) & 0xFF; // Alpha
+                                pixelSum[1] += (rgb >> 16) & 0xFF; // Red
+                                pixelSum[2] += (rgb >> 8) & 0xFF;  // Green
+                                pixelSum[3] += rgb & 0xFF;         // Blue
+                            }
+                        }
+
+                        for (int a = 0; a < n; a++) {
+                            for (int b = 0; b < n; b++) {
+                                int avgAlpha = pixelSum[0] / (n * n);
+                                int avgRed = pixelSum[1] / (n * n);
+                                int avgGreen = pixelSum[2] / (n * n);
+                                int avgBlue = pixelSum[3] / (n * n);
+
+                                int p = (avgAlpha << 24) | (avgRed << 16) | (avgGreen << 8) | avgBlue;
+                                pixImg.setRGB(x + a, y + b, p);
+                            }
+                        }
+                    }
+                }
+                image = pixImg;
+                repaint();
+                return null;
+            }
+        }.execute();
     }
 
 }

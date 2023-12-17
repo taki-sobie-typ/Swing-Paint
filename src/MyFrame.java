@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.Objects;
 
 public class MyFrame extends JFrame implements ActionListener {
+    private CanvaPanel canvaPanel = new CanvaPanel();
     MyFrame(){
         // config
         setTitle("Paint2.0");
@@ -16,7 +17,6 @@ public class MyFrame extends JFrame implements ActionListener {
         setLayout(new BorderLayout());
 
         // default Pane creation
-        CanvaPanel canvaPanel = new CanvaPanel();
         add(canvaPanel, BorderLayout.CENTER);
 
         // whole MENUS
@@ -61,6 +61,7 @@ public class MyFrame extends JFrame implements ActionListener {
         //creation of menus
         JMenu fileMenu = new JMenu("File");
         JMenu penMenu = new JMenu("Tools");
+        JMenu thicknessMenu = new JMenu("Thickness");
         JMenu effectMenu = new JMenu("Effects");
 
         // creation of menuItems
@@ -101,15 +102,30 @@ public class MyFrame extends JFrame implements ActionListener {
                 canvaPanel.canva.setRubberOn(false);
             }
         });
-        JMenuItem thicknessItem = new JMenuItem("Thickness");
+        JMenuItem thickness1xItem = new JMenuItem("1");
+        thickness1xItem.addActionListener(this);
+
+        JMenuItem thickness2xItem = new JMenuItem("2");
+        thickness2xItem.addActionListener(this);
+
+        JMenuItem thickness4xItem = new JMenuItem("4");
+        thickness4xItem.addActionListener(this);
+
+        JMenuItem thickness8xItem = new JMenuItem("8");
+        thickness8xItem.addActionListener(this);
+
         // for effectMenu
         JMenuItem blurItem = new JMenuItem("Blur");
+
+
+        JMenuItem pixelateItem = new JMenuItem("Pixelate");
+        pixelateItem.addActionListener(e-> {
+            canvaPanel.canva.pixelateImage(5);
+        });
+
         JMenuItem grayScaleItem = new JMenuItem("Gray Scale");
-        grayScaleItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                canvaPanel.canva.toGrayScale();
-            }
+        grayScaleItem.addActionListener(e-> {
+            canvaPanel.canva.toGrayScale();
         });
 
 
@@ -125,14 +141,20 @@ public class MyFrame extends JFrame implements ActionListener {
         fileMenu.add(helpItem);
 
         penMenu.add(rubberPenSwitcherItem);
-        penMenu.add(thicknessItem);
+        penMenu.add(thicknessMenu);
+        thicknessMenu.add(thickness1xItem);
+        thicknessMenu.add(thickness2xItem);
+        thicknessMenu.add(thickness4xItem);
+        thicknessMenu.add(thickness8xItem);
 
         effectMenu.add(blurItem);
+        effectMenu.add(pixelateItem);
         effectMenu.add(grayScaleItem);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-
+        JMenuItem selectedJMenuItem = (JMenuItem) e.getSource();
+        canvaPanel.canva.setWidthOfStroke(Integer.parseInt(selectedJMenuItem.getText()));
     }
 }
