@@ -171,10 +171,10 @@ public class Canva extends JPanel {
                 g.drawImage(dummyImage,0,0,null);
                 g.dispose();
                 image = grayImage;
+                repaint();
                 return null;
             }
         }.execute();
-        repaint();
     }
 
     // Gaussian Blur is basically the same as pixelating, but instead of an average, we use a weighted average.
