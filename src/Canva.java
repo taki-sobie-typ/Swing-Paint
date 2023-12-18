@@ -219,12 +219,14 @@ public class Canva extends JPanel {
             }
 
             private static int getWeight(int a, int b) {
+                System.out.println("Calculating pixel weight");
                 // Calculate the weight based on the distance from the center
                 int distance = Math.abs(a - 1) + Math.abs(b - 1);
                 return 9 - distance; // Higher weight towards the center
             }
 
             private static int getTotalWeight() {
+                System.out.println("Calculating total weight");
                 // Calculate the total weight for normalization
                 int totalWeight = 0;
                 for (int a = 0; a < 3; a++) {

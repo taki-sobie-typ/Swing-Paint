@@ -60,6 +60,7 @@ public class MyFrame extends JFrame implements ActionListener {
         });
 
         JMenuItem helpItem = new JMenuItem("Help");
+        helpItem.addActionListener(e->displayHelp());
 
         // for penMenu
         JMenuItem rubberPenSwitcherItem = new JMenuItem("Rubber");
@@ -144,6 +145,10 @@ public class MyFrame extends JFrame implements ActionListener {
         colorPanel.add(blueButton);
         colorPanel.add(whiteButton);
         return colorPanel;
+    }
+
+    private void displayHelp() {
+        JOptionPane.showMessageDialog(null, "App info:\nPaint2.0 app in early development state\nIf help needed go to Github");
     }
 
     @Override
