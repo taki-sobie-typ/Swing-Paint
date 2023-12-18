@@ -116,6 +116,9 @@ public class MyFrame extends JFrame implements ActionListener {
 
         // for effectMenu
         JMenuItem blurItem = new JMenuItem("Blur");
+        blurItem.addActionListener(e-> {
+           canvaPanel.canva.blurImageGauss();
+        });
 
 
         JMenuItem pixelateItem = new JMenuItem("Pixelate");

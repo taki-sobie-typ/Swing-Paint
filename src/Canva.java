@@ -164,10 +164,11 @@ public class Canva extends JPanel {
         new SwingWorker<Void, Void>() {
             @Override
             protected Void doInBackground(){
+                BufferedImage dummyImage = image;
                 System.out.println("Applying GrayScale");
-                BufferedImage grayImage = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_BYTE_GRAY);
+                BufferedImage grayImage = new BufferedImage(dummyImage.getWidth(), dummyImage.getHeight(), BufferedImage.TYPE_BYTE_GRAY);
                 Graphics g = grayImage.getGraphics();
-                g.drawImage(image,0,0,null);
+                g.drawImage(dummyImage,0,0,null);
                 g.dispose();
                 image = grayImage;
                 return null;
@@ -176,20 +177,86 @@ public class Canva extends JPanel {
         repaint();
     }
 
+    // Gaussian Blur is basically the same as pixelating, but instead of an average, we use a weighted average.
+    // And we are going to use a weight matrix for that,
+    // basically the center is heaviest, and the outer edges of a matrix are lighter
+    public void blurImageGauss(){
+        new SwingWorker<Void, Void>() {
+            @Override
+            protected Void doInBackground(){
+                BufferedImage dummyImage = image;
+                System.out.println("Applying Gaussian Blur");
+                BufferedImage blurredImage = new BufferedImage(dummyImage.getWidth()-2, dummyImage.getHeight()-2, BufferedImage.TYPE_INT_ARGB);
+
+                for (int y = 0; y < blurredImage.getHeight(); y++) {
+                    for (int x = 0; x < blurredImage.getWidth(); x++) {
+                        int[] pixelSum = new int[]{0, 0, 0, 0}; // ARGB
+
+                        for (int a = 0; a < 3; a++) {
+                            for (int b = 0; b < 3; b++) {
+                                int rgb = dummyImage.getRGB(x + a, y + b);
+                                int weight = getWeight(a, b);
+                                pixelSum[0] += weight * ((rgb >> 24) & 0xFF); // Alpha
+                                pixelSum[1] += weight * ((rgb >> 16) & 0xFF); // Red
+                                pixelSum[2] += weight * ((rgb >> 8) & 0xFF);  // Green
+                                pixelSum[3] += weight * (rgb & 0xFF);         // Blue
+                            }
+                        }
+
+                        int totalWeight = getTotalWeight();
+                        for (int i = 0; i < 4; i++) {
+                            pixelSum[i] /= totalWeight;
+                        }
+
+                        int p = (pixelSum[0] << 24) | (pixelSum[1] << 16) | (pixelSum[2] << 8) | pixelSum[3];
+                        blurredImage.setRGB(x, y, p);
+                    }
+                }
+
+                image = blurredImage;
+                repaint();
+                return null;
+            }
+
+            private static int getWeight(int a, int b) {
+                // Calculate the weight based on the distance from the center
+                int distance = Math.abs(a - 1) + Math.abs(b - 1);
+                return 9 - distance; // Higher weight towards the center
+            }
+
+            private static int getTotalWeight() {
+                // Calculate the total weight for normalization
+                int totalWeight = 0;
+                for (int a = 0; a < 3; a++) {
+                    for (int b = 0; b < 3; b++) {
+                        totalWeight += getWeight(a, b);
+                    }
+                }
+                return totalWeight;
+            }
+
+        }.execute();
+        repaint();
+    }
+
+
     public void pixelateImage(int n){
         new SwingWorker<Void, Void>() {
             @Override
             protected Void doInBackground(){
-                System.out.println("Applying Pixelate");
-                BufferedImage pixImg = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_ARGB);
+                BufferedImage dummyImage = image;
+                BufferedImage pixImg = new BufferedImage(dummyImage.getWidth(), dummyImage.getHeight(), BufferedImage.TYPE_INT_ARGB);
 
-                for (int y = 0; y < image.getHeight() - n; y += n) {
-                    for (int x = 0; x < image.getWidth() - n; x += n) {
-                        int[] pixelSum = new int[]{0, 0, 0, 0}; // RGBA
+                for (int y = 0; y < dummyImage.getHeight() - n; y += n) {
+                    for (int x = 0; x < dummyImage.getWidth() - n; x += n) {
+                        //for different color values Opacity, Red, Green, Blue
+                        //if not there we use one value then we turn the image Gray
+                        int[] pixelSum = new int[]{0, 0, 0, 0}; // ARGB
 
                         for (int a = 0; a < n; a++) {
                             for (int b = 0; b < n; b++) {
-                                int rgb = image.getRGB(x + a, y + b);
+                                int rgb = dummyImage.getRGB(x + a, y + b);
+                                //That's first go through an image chunk by chunk to get the values of all pixels
                                 pixelSum[0] += (rgb >> 24) & 0xFF; // Alpha
                                 pixelSum[1] += (rgb >> 16) & 0xFF; // Red
                                 pixelSum[2] += (rgb >> 8) & 0xFF;  // Green
@@ -199,11 +266,13 @@ public class Canva extends JPanel {
 
                         for (int a = 0; a < n; a++) {
                             for (int b = 0; b < n; b++) {
+                                //there we calculate an average
                                 int avgAlpha = pixelSum[0] / (n * n);
                                 int avgRed = pixelSum[1] / (n * n);
                                 int avgGreen = pixelSum[2] / (n * n);
                                 int avgBlue = pixelSum[3] / (n * n);
 
+                                //apply an average to all the different color codes
                                 int p = (avgAlpha << 24) | (avgRed << 16) | (avgGreen << 8) | avgBlue;
                                 pixImg.setRGB(x + a, y + b, p);
                             }
