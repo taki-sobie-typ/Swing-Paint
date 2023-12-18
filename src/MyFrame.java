@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.util.Objects;
 
 public class MyFrame extends JFrame implements ActionListener {
-    private CanvaPanel canvaPanel = new CanvaPanel();
+    private final CanvaPanel canvaPanel = new CanvaPanel();
     MyFrame(){
         // config
         setTitle("Paint2.0");
@@ -24,37 +24,7 @@ public class MyFrame extends JFrame implements ActionListener {
         setJMenuBar(myMenuBar);
 
         // color PANEL
-        JPanel colorPanel = new JPanel();
-        colorPanel.setLayout(new GridLayout(20,1));
-
-        JButton blackButton = new JButton();
-        blackButton.setBackground(Color.black);
-        blackButton.addActionListener(e ->{
-            canvaPanel.canva.setMyColor(0);
-        });
-
-        JButton redButton = new JButton();
-        redButton.setBackground(Color.red);
-        redButton.addActionListener(e ->{
-            canvaPanel.canva.setMyColor(1);
-        });
-
-        JButton blueButton = new JButton();
-        blueButton.setBackground(Color.blue);
-        blueButton.addActionListener(e ->{
-            canvaPanel.canva.setMyColor(2);
-        });
-
-        JButton whiteButton = new JButton();
-        whiteButton.setBackground(Color.white);
-        whiteButton.addActionListener(e ->{
-            canvaPanel.canva.setMyColor(3);
-        });
-
-        colorPanel.add(blackButton);
-        colorPanel.add(redButton);
-        colorPanel.add(blueButton);
-        colorPanel.add(whiteButton);
+        JPanel colorPanel = getjPanel();
 
         add(colorPanel, BorderLayout.WEST);
 
@@ -116,20 +86,14 @@ public class MyFrame extends JFrame implements ActionListener {
 
         // for effectMenu
         JMenuItem blurItem = new JMenuItem("Blur");
-        blurItem.addActionListener(e-> {
-           canvaPanel.canva.blurImageGauss();
-        });
+        blurItem.addActionListener(e-> canvaPanel.canva.blurImageGauss());
 
 
         JMenuItem pixelateItem = new JMenuItem("Pixelate");
-        pixelateItem.addActionListener(e-> {
-            canvaPanel.canva.pixelateImage(5);
-        });
+        pixelateItem.addActionListener(e-> canvaPanel.canva.pixelateImage(5));
 
         JMenuItem grayScaleItem = new JMenuItem("Gray Scale");
-        grayScaleItem.addActionListener(e-> {
-            canvaPanel.canva.toGrayScale();
-        });
+        grayScaleItem.addActionListener(e-> canvaPanel.canva.toGrayScale());
 
 
         // adding menus
@@ -153,6 +117,33 @@ public class MyFrame extends JFrame implements ActionListener {
         effectMenu.add(blurItem);
         effectMenu.add(pixelateItem);
         effectMenu.add(grayScaleItem);
+    }
+
+    private JPanel getjPanel() {
+        JPanel colorPanel = new JPanel();
+        colorPanel.setLayout(new GridLayout(20,1));
+
+        JButton blackButton = new JButton();
+        blackButton.setBackground(Color.black);
+        blackButton.addActionListener(e -> canvaPanel.canva.setMyColor(0));
+
+        JButton redButton = new JButton();
+        redButton.setBackground(Color.red);
+        redButton.addActionListener(e -> canvaPanel.canva.setMyColor(1));
+
+        JButton blueButton = new JButton();
+        blueButton.setBackground(Color.blue);
+        blueButton.addActionListener(e -> canvaPanel.canva.setMyColor(2));
+
+        JButton whiteButton = new JButton();
+        whiteButton.setBackground(Color.white);
+        whiteButton.addActionListener(e -> canvaPanel.canva.setMyColor(3));
+
+        colorPanel.add(blackButton);
+        colorPanel.add(redButton);
+        colorPanel.add(blueButton);
+        colorPanel.add(whiteButton);
+        return colorPanel;
     }
 
     @Override

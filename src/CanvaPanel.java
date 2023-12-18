@@ -8,7 +8,6 @@ import java.io.IOException;
 
 public class CanvaPanel extends JPanel {
     private final FileNameExtensionFilter fileNameExtensionFilter = new FileNameExtensionFilter("image.png","png");
-    private static File file = null;
     Canva canva = new Canva();
     CanvaPanel(){
         setLayout(new GridLayout(1,1));
@@ -19,7 +18,7 @@ public class CanvaPanel extends JPanel {
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setFileFilter(fileNameExtensionFilter);
         if(fileChooser.showOpenDialog(null)==JFileChooser.APPROVE_OPTION){
-            file = fileChooser.getSelectedFile();
+            File file = fileChooser.getSelectedFile();
             this.canva.setImage(file);
             this.canva.repaint();
             JOptionPane.showMessageDialog(null, "File chosen!");
@@ -29,7 +28,7 @@ public class CanvaPanel extends JPanel {
     public void saveImage() throws IOException {
         new SwingWorker<Void, Void>() {
             @Override
-            protected Void doInBackground() throws Exception {
+            protected Void doInBackground() {
                 JFileChooser fileChooser = new JFileChooser();
                 fileChooser.setFileFilter(fileNameExtensionFilter);
                 BufferedImage imageToSave = canva.recreateImage();
