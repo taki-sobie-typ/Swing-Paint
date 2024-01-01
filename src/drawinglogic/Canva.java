@@ -1,3 +1,5 @@
+package drawinglogic;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.event.*;

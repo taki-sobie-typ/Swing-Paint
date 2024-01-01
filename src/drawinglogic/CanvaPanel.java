@@ -1,3 +1,7 @@
+package drawinglogic;
+
+import drawinglogic.Canva;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -8,8 +12,8 @@ import java.io.IOException;
 
 public class CanvaPanel extends JPanel {
     private final FileNameExtensionFilter fileNameExtensionFilter = new FileNameExtensionFilter("image.png","png");
-    Canva canva = new Canva();
-    CanvaPanel(){
+    public Canva canva = new Canva();
+    public CanvaPanel(){
         setLayout(new GridLayout(1,1));
         add(canva);
     }
