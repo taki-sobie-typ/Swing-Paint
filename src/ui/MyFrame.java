@@ -1,6 +1,5 @@
 package ui;
 
-import ui.MyColorPanel;
 import drawinglogic.CanvaPanel;
 import javax.swing.*;
 import java.awt.*;

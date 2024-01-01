@@ -5,7 +5,6 @@ import javax.swing.*;
 public class ApplicationMain {
     /**
      * Main function of SwingPain
-     * @param args
      */
     public static void main(String[] args){
         SwingUtilities.invokeLater(() ->{

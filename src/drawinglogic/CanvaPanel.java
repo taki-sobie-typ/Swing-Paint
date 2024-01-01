@@ -1,7 +1,5 @@
 package drawinglogic;
 
-import drawinglogic.Canva;
-
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
