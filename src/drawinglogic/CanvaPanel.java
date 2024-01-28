@@ -11,6 +11,7 @@ import java.io.IOException;
 public class CanvaPanel extends JPanel {
     private final FileNameExtensionFilter fileNameExtensionFilter = new FileNameExtensionFilter("image.png","png");
     public Canva canva = new Canva();
+
     public CanvaPanel(){
         setLayout(new GridLayout(1,1));
         add(canva);
@@ -50,7 +51,4 @@ public class CanvaPanel extends JPanel {
             }
         }.execute();
     }
-
-
-
 }
