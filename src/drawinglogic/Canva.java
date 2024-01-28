@@ -10,9 +10,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class Canva extends JPanel {
-    private final BlurImageFilter blurImage = new BlurImageFilter(this);
-    private final PixelateImageFilter pixelateImage = new PixelateImageFilter(this);
-    private final GrayScaleFilter grayScaleFilter = new GrayScaleFilter(this);
     private Boolean rubberOn = false;
     private BufferedImage image = null;
     private int widthOfStroke = 1;
@@ -21,6 +18,9 @@ public class Canva extends JPanel {
     private final ArrayList<Point> pointsRed = new ArrayList<>();
     private final ArrayList<Point> pointsBlue = new ArrayList<>();
     private final ArrayList<Point> pointsWhite = new ArrayList<>();
+    private final BlurImageFilter blurImage = new BlurImageFilter(this);
+    private final PixelateImageFilter pixelateImage = new PixelateImageFilter(this);
+    private final GrayScaleFilter grayScaleFilter = new GrayScaleFilter(this);
 
     public Canva() {
         addMouseListener(new MouseAdapter() {
